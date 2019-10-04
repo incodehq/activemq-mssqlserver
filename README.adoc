@@ -11,7 +11,7 @@ This takes the place of the default config, and is baked into the Docker image.
 This replacement `activemq.xml` uses the `PropertyPlaceholderConfigurer` to read configuration property values (specifying the database URL etc) from an external properties file.
 The name of this file is specified using the `spring.config.file` system property.
 
-The Docker image has an entrypoint to run the console as follows:
+The Docker image's entrypoint (`CMD`, in fact) is `entrypoint.sh`, which runs the ActiveMQ console as follows:
 
 [source,bash]
 ----
@@ -19,6 +19,9 @@ activemq console -Dspring.config.file=file:/run/secrets/spring.properties
 ----
 
 This assumes that the `spring.properties` has been mounted as a secret in `/run/secrets`.
+
+However, if no `/run/secrets/spring.properties` can be found, then the script will automatically generate a fallback `spring.properties` to run with an in-memory HSQLDB database.
+This is useful if running adhoc/in development, outside of an orchestrator.
 
 
 == `spring.properties`
@@ -38,6 +41,7 @@ activemq.db.jdbcAdapter=org.apache.activemq.store.jdbc.adapter.TransactJDBCAdapt
 activemq.db.databaseLocker=org.apache.activemq.store.jdbc.adapter.TransactDatabaseLocker
 ----
 
+Typically just the `activemq.db.url`, `activemq.db.username` and `activemq.db.password` properties need configuring; the rest can be left as is.
 
 == Further Reading
 
@@ -46,8 +50,7 @@ Additional info at:
 * link:https://activemq.apache.org/broker-xbean-uri[]]
 +
 However, didn't seem to pick up `xbean:file:...` so decided to just overwrite the `conf/activemq.xml` file
+
 * link:https://activemq.apache.org/xml-configuration[]
-
-
 
 
