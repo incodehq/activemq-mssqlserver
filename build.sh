@@ -1,6 +1,6 @@
 #!/bin/bash
 
-IMAGE="incodehq/activemq-sqlserver"
+IMAGE="incodehq/activemq-mssqlserver"
 
 if [ -f "tag.properties" ]
 then

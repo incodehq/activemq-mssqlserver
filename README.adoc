@@ -1,3 +1,53 @@
 = ActiveMQ on SQL Server
 
 Adapted from link:https://hub.docker.com/r/rmohr/activemq/dockerfile[]
+
+
+== Design
+
+We run the activemq broker using an updated config, `conf/activemq.xml`.
+This takes the place of the default config, and is baked into the Docker image.
+
+This replacement `activemq.xml` uses the `PropertyPlaceholderConfigurer` to read configuration property values (specifying the database URL etc) from an external properties file.
+The name of this file is specified using the `spring.config.file` system property.
+
+The Docker image has an entrypoint to run the console as follows:
+
+[source,bash]
+----
+activemq console -Dspring.config.file=file:/run/secrets/spring.properties
+----
+
+This assumes that the `spring.properties` has been mounted as a secret in `/run/secrets`.
+
+
+== `spring.properties`
+
+The format of `spring.properties` is:
+
+[source,properties]
+.spring.properties
+----
+activemq.data=activemq-data
+
+activemq.db.driverClassName=com.microsoft.sqlserver.jdbc.SQLServerDriver
+activemq.db.url=jdbc:sqlserver://localhost:1433;instance=.;databaseName=activemq
+activemq.db.username=activemq
+activemq.db.password=activemq
+activemq.db.jdbcAdapter=org.apache.activemq.store.jdbc.adapter.TransactJDBCAdapter
+activemq.db.databaseLocker=org.apache.activemq.store.jdbc.adapter.TransactDatabaseLocker
+----
+
+
+== Further Reading
+
+Additional info at:
+
+* link:https://activemq.apache.org/broker-xbean-uri[]]
++
+However, didn't seem to pick up `xbean:file:...` so decided to just overwrite the `conf/activemq.xml` file
+* link:https://activemq.apache.org/xml-configuration[]
+
+
+
+
