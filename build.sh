@@ -15,5 +15,5 @@ echo "  $IMAGE:$NOW"
 echo ""
 
 docker build -t $IMAGE:$NOW ./
-#docker push $IMAGE:$NOW
+docker push $IMAGE:$NOW
 
