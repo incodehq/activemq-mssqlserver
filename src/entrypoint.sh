@@ -1,6 +1,14 @@
 #!/bin/sh
 
 mkdir -p /run/secrets
+if [ -d /run/secrets ]
+then
+  cd /run/secrets || exit 1
+  # strip off any prefix
+  mv *.spring.properties spring.properties
+fi
+
+
 if [ ! -f "/run/secrets/spring.properties" ]; then
 
   cat > /run/secrets/spring.properties <<EOF
