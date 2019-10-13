@@ -1,6 +1,16 @@
 = ActiveMQ on SQL Server
 
-Adapted from link:https://hub.docker.com/r/rmohr/activemq/dockerfile[]
+This project creates a Docker image of the ActiveMQ distribution, configured to run against SQL Server.
+
+If run without any configuration, it falls back to using an in-memory HSQL database.
+
+The Docker image of this app is available at https://hub.docker.com/r/incodehq/activemq-mssqlserver[Docker hub].
+
+To allow configuration to be easily externalized, the image expects a `/run/secrets` directory to exist, and switches to and then runs the application in that directory.
+Spring Boot will then link:https://docs.spring.io/spring-boot/docs/current/reference/html/boot-features-external-config.html#boot-features-external-config-application-property-files[automatically pick up] that configuration and use it.
+
+Typically therefore all that is required is to define an `spring.properties` file as a secret.
+
 
 
 == Design
@@ -43,6 +53,28 @@ activemq.db.databaseLocker=org.apache.activemq.store.jdbc.adapter.TransactDataba
 
 Typically just the `activemq.db.url`, `activemq.db.username` and `activemq.db.password` properties need configuring; the rest can be left as is.
 
+
+== Running Locally
+
+To run the Docker image locally, use:
+
+[source,bash]
+----
+export TAG=20191011.1912.master.880118bc
+
+docker run -p61616:61616 -p8161:8161 incodehq/activemq-mssqlserver:$TAG
+----
+
+where `$TAG` is set to one of the images from the https://cloud.docker.com/u/incodehq/repository/docker/incodehq/activemq-mssqlserver/tags[tags page].
+
+This exposes :
+
+* the TCP broker at port 61616
+* the UI at port 8161 (that is, link:http://localhost:8161[]])
+
+The hard-coded password is `admin/admin` (from `conf/users.properties`, hard-coded into the image).
+
+
 == Further Reading
 
 Additional info at:
@@ -54,3 +86,6 @@ However, didn't seem to pick up `xbean:file:...` so decided to just overwrite th
 * link:https://activemq.apache.org/xml-configuration[]
 
 
+== Credits
+
+Adapted from link:https://hub.docker.com/r/rmohr/activemq/dockerfile[]

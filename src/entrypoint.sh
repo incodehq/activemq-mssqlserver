@@ -5,7 +5,7 @@ if [ -d /run/secrets ]
 then
   cd /run/secrets || exit 1
   # strip off any prefix
-  mv *.spring.properties spring.properties
+  ln -s *.spring.properties spring.properties
 fi
 
 
