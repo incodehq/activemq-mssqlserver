@@ -1,3 +1,6 @@
+THIS PROJECT HAS BEEN ARCHIVED, AND MOVED TO A PRIVATE REPO ON gitlab.com
+
+
 = ActiveMQ on SQL Server
 
 This project creates a Docker image of the ActiveMQ distribution, configured to run against SQL Server.
